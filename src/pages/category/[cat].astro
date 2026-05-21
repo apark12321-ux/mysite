@@ -4,8 +4,9 @@ import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   const labels = {
-    start: '시작하기',
-    review: '경험·리뷰',
+    childcare: '육아·출산',
+    senior: '노후·연금',
+    living: '생활복지',
   };
   const posts = await getCollection('posts', ({ data }) => !data.draft);
   return Object.entries(labels).map(([key, label]) => ({
@@ -13,21 +14,17 @@ export async function getStaticPaths() {
     props: { label, posts: posts.filter((p) => p.data.category === label) },
   }));
 }
-
 const { label, posts } = Astro.props;
 const sorted = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const fmt = (d) => new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }).format(d);
 ---
-<Base title={label} description={`${label} 카테고리의 글 모음`}>
-  <section class="hero" style="padding:56px 0 32px">
-    <div class="wrap"><h1>{label}</h1></div>
-  </section>
+<Base title={`${label} 혜택 모음`} description={`${label} 관련 정부지원금과 복지 제도를 정리한 글 모음입니다.`}>
+  <section class="hero" style="padding:54px 0 26px"><div class="wrap"><h1>{label}</h1></div></section>
   <div class="wrap-wide">
     <div class="post-grid">
       {sorted.length === 0 && <p style="color:var(--ink-faint)">아직 글이 없습니다.</p>}
       {sorted.map((post) => (
         <a href={`/posts/${post.id}/`} class="card">
-          <div class="emoji">{post.data.heroEmoji}</div>
           <span class="cat">{post.data.category}</span>
           <h2>{post.data.title}</h2>
           <p>{post.data.description}</p>

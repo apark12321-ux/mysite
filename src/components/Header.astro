@@ -1,18 +1,17 @@
 ---
 const nav = [
   { href: '/', label: '홈' },
-  { href: '/category/start', label: '시작하기' },
-  { href: '/category/review', label: '경험·리뷰' },
+  { href: '/category/childcare', label: '육아·출산' },
+  { href: '/category/senior', label: '노후·연금' },
+  { href: '/category/living', label: '생활복지' },
   { href: '/about', label: '소개' },
   { href: '/contact', label: '문의' },
 ];
 ---
 <header class="site-header">
   <div class="bar">
-    <a href="/" class="brand" style="text-decoration:none">곁들<span>이</span></a>
+    <a href="/" class="brand" style="text-decoration:none"><span class="dot"></span>혜택로</a>
     <button class="menu-toggle" aria-label="메뉴">☰</button>
-    <nav class="nav">
-      {nav.map((n) => <a href={n.href}>{n.label}</a>)}
-    </nav>
+    <nav class="nav">{nav.map((n) => <a href={n.href}>{n.label}</a>)}</nav>
   </div>
 </header>

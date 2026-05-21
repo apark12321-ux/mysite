@@ -10,63 +10,59 @@ export interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   image?: string;
+  keywords?: string;
 }
 
+const SITE_NAME = '혜택로'; // ⚠️ 원하는 사이트 이름으로 교체
 const {
-  title,
-  description,
-  type = 'website',
-  publishedTime,
-  modifiedTime,
-  image = '/og-default.png',
+  title, description, type = 'website',
+  publishedTime, modifiedTime,
+  image = '/og-default.jpg',
+  keywords = '정부지원금, 부모급여, 기초연금, 국민연금, 복지혜택, 출산지원금, 근로장려금, 복지로',
 } = Astro.props;
 
-const SITE_NAME = '곁들이'; // ⚠️ 사이트 이름 — 원하는 이름으로 교체
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
 
-// JSON-LD 구조화 데이터 (SEO 강화)
 const jsonLd = type === 'article'
   ? {
-      '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
-      headline: title,
-      description,
-      datePublished: publishedTime,
-      dateModified: modifiedTime ?? publishedTime,
-      author: { '@type': 'Person', name: SITE_NAME },
+      '@context': 'https://schema.org', '@type': 'BlogPosting',
+      headline: title, description,
+      datePublished: publishedTime, dateModified: modifiedTime ?? publishedTime,
+      author: { '@type': 'Organization', name: SITE_NAME },
       publisher: { '@type': 'Organization', name: SITE_NAME },
       mainEntityOfPage: { '@type': 'WebPage', '@id': canonical.toString() },
     }
-  : {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: SITE_NAME,
-      url: Astro.site?.toString(),
-    };
+  : { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: Astro.site?.toString() };
 ---
 <!doctype html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} | {SITE_NAME}</title>
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content={`${SITE_NAME} 편집팀`} />
     <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
 
-    <!-- Open Graph -->
+    <!-- ⚠️ 애드센스 승인 후: 본인 게시자 ID로 교체하고 주석 해제 -->
+    <!-- <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" /> -->
+
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:locale" content="ko_KR" />
     {publishedTime && <meta property="article:published_time" content={publishedTime} />}
     {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -75,23 +71,16 @@ const jsonLd = type === 'article'
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
 
-    <!--
-      ⚠️ 애드센스 승인 후: 아래 주석을 풀고 ca-pub-XXXX를 본인 게시자 ID로 교체하세요.
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-    -->
-
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <Header />
-    <main>
-      <slot />
-    </main>
+    <main><slot /></main>
     <Footer />
     <script>
-      const toggle = document.querySelector('.menu-toggle');
-      const nav = document.querySelector('.nav');
-      toggle?.addEventListener('click', () => nav?.classList.toggle('open'));
+      const t = document.querySelector('.menu-toggle');
+      const n = document.querySelector('.nav');
+      t?.addEventListener('click', () => n?.classList.toggle('open'));
     </script>
   </body>
 </html>

@@ -17,9 +17,9 @@ export async function GET(context) {
     `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>곁들이</title>
+    <title>혜택로</title>
     <link>${site}</link>
-    <description>직접 해본 부업·수익화 기록</description>
+    <description>정부지원금·복지 혜택 가이드</description>
     <language>ko</language>${items}
   </channel>
 </rss>`,

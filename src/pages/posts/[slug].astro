@@ -6,7 +6,6 @@ export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
   return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
-
 const { post } = Astro.props;
 const { Content } = await render(post);
 const fmt = (d) => new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }).format(d);
@@ -17,6 +16,7 @@ const fmt = (d) => new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'l
   type="article"
   publishedTime={post.data.pubDate.toISOString()}
   modifiedTime={post.data.updatedDate?.toISOString()}
+  keywords={post.data.tags.join(', ')}
 >
   <article class="article">
     <div class="wrap">
@@ -25,10 +25,14 @@ const fmt = (d) => new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'l
         <span class="cat">{post.data.category}</span>
         <h1>{post.data.title}</h1>
         <div class="meta">
-          {fmt(post.data.pubDate)}
-          {post.data.updatedDate && ` · ${fmt(post.data.updatedDate)} 업데이트`}
-          {` · ${post.data.author}`}
+          {fmt(post.data.pubDate)} 작성
+          {post.data.updatedDate && ` · ${fmt(post.data.updatedDate)} 최종 확인`}
         </div>
+      </div>
+
+      <div class="update-box">
+        📌 이 글은 작성 시점의 정보를 바탕으로 합니다. 정부 정책과 지원 금액은 수시로 바뀌므로,
+        신청 전 반드시 <strong>복지로·정부24 등 공식 기관</strong>에서 최신 내용을 확인하세요.
       </div>
 
       {post.data.affiliate && (
@@ -37,21 +41,22 @@ const fmt = (d) => new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'l
         </div>
       )}
 
-      <div class="prose">
-        <Content />
-      </div>
+      <div class="prose"><Content /></div>
 
-      <!-- 광고 슬롯: 애드센스 승인 후 이 자리에 광고 코드 삽입 -->
       <div class="ad-slot">광고 위치 (애드센스 승인 후 코드 삽입)</div>
 
+      <div class="source-box">
+        <strong>참고 및 공식 신청처</strong><br />
+        · 복지로 (www.bokjiro.go.kr) — 복지 서비스 통합 신청·조회<br />
+        · 정부24 (www.gov.kr) — 정부 민원·지원금 통합 신청<br />
+        ※ 본 글은 정보 제공 목적이며, 정확한 자격·금액은 공식 기관 안내를 따릅니다.
+      </div>
+
       <div class="author-box">
-        <div class="ava">곁</div>
+        <div class="ava">혜</div>
         <div>
-          <div class="who">{post.data.author}</div>
-          <div class="bio">
-            <!-- ⚠️ 본인 소개로 교체하세요. 실제 경험·이력이 EEAT 신호가 됩니다. -->
-            직접 부업과 수익화를 시도하며 겪은 과정을 기록합니다. 해보지 않은 것은 쓰지 않습니다.
-          </div>
+          <div class="who">혜택로 편집팀</div>
+          <div class="bio">정부지원금과 복지 제도를 공식 자료 기준으로 정리합니다. 정책 변경 시 글을 업데이트합니다.</div>
         </div>
       </div>
     </div>
