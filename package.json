@@ -1,0 +1,16 @@
+{
+  "name": "sidehustle-site",
+  "type": "module",
+  "version": "1.0.0",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^6.3.6",
+    "@astrojs/sitemap": "^3.7.0"
+  }
+}

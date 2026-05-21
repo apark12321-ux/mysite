@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const fmt = (d) => new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }).format(d);
+---
+<Base
+  title="직접 해본 부업·수익화 기록"
+  description="과장 없이, 직접 해보고 검증한 부업과 수익화 경험을 기록합니다. 실제 수치와 솔직한 단점까지 담았습니다."
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">해보고 씁니다</p>
+      <h1>직접 해본 것만,<br />솔직하게 기록합니다</h1>
+      <p>부업과 수익화에 관한 과장된 약속은 빼고, 실제로 해본 경험과 숫자, 그리고 잘 안 됐던 이야기까지 적습니다.</p>
+      <div class="rule"></div>
+    </div>
+  </section>
+
+  <div class="wrap-wide">
+    <div class="post-grid">
+      {posts.map((post) => (
+        <a href={`/posts/${post.id}/`} class="card">
+          <div class="emoji">{post.data.heroEmoji}</div>
+          <span class="cat">{post.data.category}</span>
+          <h2>{post.data.title}</h2>
+          <p>{post.data.description}</p>
+          <div class="meta">{fmt(post.data.pubDate)}</div>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>

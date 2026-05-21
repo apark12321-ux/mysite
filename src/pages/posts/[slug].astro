@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const fmt = (d) => new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }).format(d);
+---
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  type="article"
+  publishedTime={post.data.pubDate.toISOString()}
+  modifiedTime={post.data.updatedDate?.toISOString()}
+>
+  <article class="article">
+    <div class="wrap">
+      <a href="/" class="back-link">← 목록으로</a>
+      <div class="head">
+        <span class="cat">{post.data.category}</span>
+        <h1>{post.data.title}</h1>
+        <div class="meta">
+          {fmt(post.data.pubDate)}
+          {post.data.updatedDate && ` · ${fmt(post.data.updatedDate)} 업데이트`}
+          {` · ${post.data.author}`}
+        </div>
+      </div>
+
+      {post.data.affiliate && (
+        <div class="affiliate-notice">
+          이 글에는 쿠팡파트너스 활동의 일환으로, 일정액의 수수료를 받는 제휴 링크가 포함되어 있습니다.
+        </div>
+      )}
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <!-- 광고 슬롯: 애드센스 승인 후 이 자리에 광고 코드 삽입 -->
+      <div class="ad-slot">광고 위치 (애드센스 승인 후 코드 삽입)</div>
+
+      <div class="author-box">
+        <div class="ava">곁</div>
+        <div>
+          <div class="who">{post.data.author}</div>
+          <div class="bio">
+            <!-- ⚠️ 본인 소개로 교체하세요. 실제 경험·이력이 EEAT 신호가 됩니다. -->
+            직접 부업과 수익화를 시도하며 겪은 과정을 기록합니다. 해보지 않은 것은 쓰지 않습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</Base>
