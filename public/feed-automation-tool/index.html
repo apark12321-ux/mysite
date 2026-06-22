@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FeedFlow Auto · 피드 자동화</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Feed Automation Studio</p>
+      <h1>1일 1피드 자동화 프로그램</h1>
+      <p class="sub">RSS/뉴스/메모를 피드 아이디어로 모으고, 이미지·캡션·해시태그·예약 상태까지 한 번에 관리합니다.</p>
+    </div>
+    <button id="exportAll" class="primary">데이터 백업</button>
+  </header>
+  <main class="layout">
+    <section class="panel">
+      <h2>① 콘텐츠 입력</h2>
+      <label>제목<input id="title" placeholder="예: 오늘의 신앙 한 줄" /></label>
+      <label>본문<textarea id="body" rows="7" placeholder="피드 본문 또는 기사 요약을 입력"></textarea></label>
+      <label>카테고리/키워드<input id="tags" placeholder="신앙,위로,말씀" /></label>
+      <label>예약일시<input id="schedule" type="datetime-local" /></label>
+      <label>배경 이미지<input id="imageInput" type="file" accept="image/*" /></label>
+      <div class="row"><button id="makePost" class="primary">피드 생성</button><button id="sampleBtn">샘플 불러오기</button></div>
+    </section>
+    <section class="panel preview">
+      <h2>② 자동 생성 미리보기</h2>
+      <canvas id="feedCanvas" width="1080" height="1080"></canvas>
+      <div class="row"><button id="downloadImage">이미지 PNG 다운로드</button><button id="copyCaption">캡션 복사</button></div>
+      <textarea id="caption" rows="8" readonly></textarea>
+    </section>
+    <section class="panel wide">
+      <h2>③ 발행 큐</h2>
+      <div class="toolbar"><button id="importCsv">CSV 예시 다운로드</button><button id="clearQueue" class="danger">큐 초기화</button></div>
+      <table><thead><tr><th>상태</th><th>예약</th><th>제목</th><th>키워드</th><th>작업</th></tr></thead><tbody id="queue"></tbody></table>
+    </section>
+    <section class="panel wide">
+      <h2>④ 운영 설정</h2>
+      <div class="cards">
+        <div class="card"><b>수집</b><span>구글알리미 RSS → Apps Script → 스프레드시트</span></div>
+        <div class="card"><b>제작</b><span>템플릿 기반 1080×1080 이미지 + 캡션 + 해시태그</span></div>
+        <div class="card"><b>발행</b><span>Meta 공식 API 또는 Buffer/Make/Zapier 연동 권장</span></div>
+        <div class="card"><b>상태관리</b><span>Ready → Generated → Scheduled → Published</span></div>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
